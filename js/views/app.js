@@ -52,6 +52,8 @@ define(function(require) {
 			// another browser tab
 			$(document).on('show', this.onDocumentShow);
 
+			$(document).on('click', this.onDocumentClick);
+
 			// Listens to key strokes, and executes a function based
 			// on the key combinations.
 			$(document).keyup(this.onKeyUp);
@@ -62,9 +64,7 @@ define(function(require) {
 			this.navigation = new NavigationView({
 				accounts: require('state').accounts
 			});
-			this.navigation.settings.show(new SettingsView({
-				accounts: require('state').accounts
-			}));
+			this.navigation.settings.show(new SettingsView());
 
 			// setup folder view
 			this.accountsView = new NavigationAccountsView();
@@ -72,6 +72,9 @@ define(function(require) {
 			this.navigation.accounts.show(this.accountsView);
 
 			this.showMessageContent();
+		},
+		onDocumentClick: function(event) {
+			Radio.ui.trigger('document:click', event);
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();

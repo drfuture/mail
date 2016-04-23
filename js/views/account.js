@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -13,6 +13,8 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var OC = require('OC');
+	var Radio = require('radio');
 	var FolderView = require('views/folder');
 	var AccountTemplate = require('text!templates/account.html');
 
@@ -20,12 +22,67 @@ define(function(require) {
 		collection: null,
 		model: null,
 		template: Handlebars.compile(AccountTemplate),
+		ui: {
+			'menu': 'div.app-navigation-entry-menu',
+			'deleteButton': 'button[class^="icon-delete"]'
+		},
+		events: {
+			'click .app-navigation-entry-utils-menu-button button': 'toggleMenu',
+			'click @ui.deleteButton': 'onDelete'
+		},
+		templateHelpers: function() {
+			return {
+				hasMenu: this.model.get('accountId') !== -1
+			};
+		},
+		// 'active' is needed to show the dotdotdot menu
+		className: 'navigation-account',
 		childView: FolderView,
 		childViewContainer: '#mail_folders',
+		menuShown: false,
 		initialize: function(options) {
 			this.model = options.model;
 			this.collection = this.model.get('folders');
-		}
 
+			this.listenTo(Radio.ui, 'document:click', function(event) {
+				var target = $(event.target);
+				if (!this.$el.is(target.closest('.navigation-account'))) {
+					// Click was not triggered by this element -> close menu
+					this.menuShown = false;
+					this.toggleMenuClass();
+				}
+			});
+		},
+		toggleMenu: function(e) {
+			e.preventDefault();
+			this.menuShown = !this.menuShown;
+			this.toggleMenuClass();
+		},
+		toggleMenuClass: function() {
+			this.ui.menu.toggleClass('open', this.menuShown);
+		},
+		onDelete: function(e) {
+			e.stopPropagation();
+
+			this.ui.deleteButton.removeClass('icon-delete').addClass('icon-loading-small');
+
+			var account = this.model;
+
+			$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
+				data: {accountId: account.get('accountId')},
+				type: 'DELETE',
+				success: function() {
+					// Delete cached message lists
+					require('cache').removeAccount(account);
+
+					// reload the complete page
+					// TODO should only reload the app nav/content
+					window.location.reload();
+				},
+				error: function() {
+					OC.Notification.show(t('mail', 'Error while deleting account.'));
+				}
+			});
+		}
 	});
 });
