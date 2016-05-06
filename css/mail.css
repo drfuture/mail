@@ -84,8 +84,7 @@
 
 /* fix scrolling */
 #app-navigation {
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 #app-navigation .utils {
@@ -129,6 +128,9 @@
 	opacity: .3;
 }
 
+#app-navigation > ul {
+	height: calc(100% - 65px);
+}
 #app-navigation ul {
 	overflow-x: hidden;
 }
@@ -183,7 +185,7 @@
 	white-space: nowrap;
 }
 .mail-account-email:first-child {
-	padding-top: 50px;
+	display: none;
 }
 .account-toggle-collapse {
 	display: block;
@@ -355,22 +357,22 @@
 
 /* editor */
 #mail-new-message-fixed {
-	position: fixed !important;
-	width: 241px !important;
 	z-index: 1;
 	padding-bottom: 12px;
 	background-color: rgba(255, 255, 255, .75);
+	padding: 10px;
+	position: relative;
 }
 #mail-new-message-list {
 	margin-top: 36px;
 }
 #mail_new_message {
-	width: 92%;
+	width: 100%;
 	padding: 10px;
 	padding-left: 34px;
-	margin: 10px 10px 0;
 	background-position: 10px center;
 	text-align: left;
+	margin: 0;
 }
 
 .message-composer {
@@ -629,20 +631,49 @@ input.submit-message,
 .mail-message-attachments {
 	margin-bottom: 20px;
 }
-.mail-message-attachment {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.mail-message-attachments .attachments > div {
+	position: relative;
+	display: inline-block;
+	border: 1px solid #f5f5f5;
+	margin: 5px;
+	padding: 6px;
 }
-.mail-message-attachment-image {
-	margin-bottom: 32px;
+.mail-message-attachments .attachments > div:hover,
+.mail-message-attachments .attachments > div span:hover {
+	background-color: #f8f8f8;
+	cursor: pointer;
+}
+@media only screen and (max-width: 768px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(100% - 5px);
+	}
+}
+@media only screen and (min-width: 769px) and (max-width: 1400px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(50% - 10px);
+	}
+}
+@media only screen and (min-width: 1401px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(33% - 12px);
+	}
+}
+.mail-message-attachments .mail-attached-image {
+	max-width: 100%;
+	max-height: 120px;
 }
 .attachment-save-to-cloud,
 .attachment-download {
+	position: absolute;
 	height: 32px;
-	min-width: 32px;
-	float: left;
-	display: inline-block;
+	width: 32px;
+	bottom: 3px;
+}
+.attachment-save-to-cloud {
+	right: 3px;
+}
+.attachment-download {
+	right: 41px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
@@ -652,6 +683,14 @@ input.submit-message,
 .mail-message-attachment-single .attachment-download {
 	background-position: 9px center;
 	padding-left: 32px;
+}
+.attachment-name {
+	display: inline-block;
+	width: calc(100% - 110px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
 }
 /* show attachment size less prominent */
 .attachment-size {

@@ -23,9 +23,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-// TODO: remove DEBUG constant check once minimum oc
-// core version >= 8.2, see https://github.com/owncloud/core/pull/18510
-$debug = (defined('DEBUG') && DEBUG) || \OC::$server->getConfig()->getSystemValue('debug', false);
 
 style('mail', 'mail');
 style('mail', 'mobile');
@@ -34,7 +31,7 @@ script('mail', 'vendor/jquery-storage-api/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
 script('mail', 'searchproxy');
-if ($debug) {
+if ($_['debug']) {
 	// Load JS dependencies asynchronously as specified in require_config.js
 	script('mail', 'require_config');
 } else {
@@ -43,14 +40,16 @@ if ($debug) {
 }
 ?>
 
+<input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
+
 <div id="user-displayname"
      style="display: none"><?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?></div>
 <div id="user-email"
      style="display: none"><?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?></div>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
+		<div id="mail-new-message-fixed"></div>
 		<ul>
-			<li id="mail-new-message-fixed"></li>
 			<li id="app-navigation-accounts"></li>
 		</ul>
 		<div id="app-settings">
