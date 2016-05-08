@@ -1,9 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## 0.4.5 – UNRELEASED
 
-## 0.4.4
+### Fixed
+- Don't send messages in flowed text format
+  [#1482](https://github.com/owncloud/mail/pull/1482) @ChristophWurst
+
+## 0.4.4 – 2016-05-06
 
 ### Added
 - Collapse folders and show only important ones
