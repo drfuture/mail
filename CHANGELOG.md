@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
   [#1464](https://github.com/owncloud/mail/pull/1464) @ChristophWurst
 - JavaScript tests are now excluded from the app archive
   [#1466](https://github.com/owncloud/mail/pull/1466) @ChristophWurst
+- show first folder of an account incase of invalid folder id
+  [#1471] (https://github.com/owncloud/mail/pull/1471/files) @tahaalibra
 
 ## 0.4.3 – 2016-04-23
 
